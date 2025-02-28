@@ -1,1 +1,1 @@
-# spg9000_exporter
+# Telestream SPG9000 Exporter for Prometheus
