@@ -2,13 +2,14 @@
 # SPG9000_Formatter.py                                             #
 #                                                                  #
 # Author:        Mike Kurras                                       #
-# Date:          2/27/2025                                         #
+# Date:          3/5/2025                                         #
 # Description:   OpenMetrics exporter for Telestream SPG9000 Sync  #
 #                Pulse Generator.                                  #
 #                Designed for use with Prometheus                  #
 #------------------------------------------------------------------#
 
 import SPG9000_Enum_Data as enums
+import SPG9000_Exporter as exporter
 
 def build_metric_block(metrics):
     metric_block = "\n".join(metrics)
@@ -176,11 +177,13 @@ def format_reference_status(data):
     metrics.append(f'spg9000_gnss_status {enums.referenceStatus_gnss[gnss_status["status"]]}')
     
     #------------------------REFERENCE SOURCE------------------
-    reference_source = data['reference-source']
-    metrics.append(f'# HELP spg9000_reference_source Current Source of Reference {enums.reference_source}')
-    metrics.append("# TYPE spg9000_reference_source gauge")
-    metrics.append(f'spg9000_reference_source {enums.reference_source[reference_source]}')
-    
+    try:
+        reference_source = data['reference-source']
+        metrics.append(f'# HELP spg9000_reference_source Current Source of Reference {enums.reference_source}')
+        metrics.append("# TYPE spg9000_reference_source gauge")
+        metrics.append(f'spg9000_reference_source {enums.reference_source[reference_source]}')
+    except Exception as e:
+        exporter.debug(e)
     return build_metric_block(metrics)
     
     

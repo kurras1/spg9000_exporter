@@ -2,7 +2,7 @@
 # SPG9000_Enum_Data.py                                             #
 #                                                                  #
 # Author:        Mike Kurras                                       #
-# Date:          2/27/2025                                         #
+# Date:          3/5/2025                                         #
 # Description:   OpenMetrics exporter for Telestream SPG9000 Sync  #
 #                Pulse Generator.                                  #
 #                Designed for use with Prometheus                  #

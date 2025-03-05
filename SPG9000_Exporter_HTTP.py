@@ -2,7 +2,7 @@
 # SPG9000_EXPORTER_HTTP.py                                         #
 #                                                                  #
 # Author:        Mike Kurras                                       #
-# Date:          2/27/2025                                         #
+# Date:          3/5/2025                                         #
 # Description:   OpenMetrics exporter for Telestream SPG9000 Sync  #
 #                Pulse Generator.                                  #
 #                Designed for use with Prometheus                  #
@@ -20,7 +20,7 @@ def get_data():
     target_ip = request.args.get('target')
     api_key = request.args.get('api_key')
     data = SPG9000_Exporter.polldata(target_ip, api_key)
-    #return f"<html><head><meta name=\"color-scheme\" content=\"light dark\"></head><body><pre style=\"word-wrap: break-word; white-space: pre-wrap;\">{data}</pre></body></html>"
+    return f"<html><head><meta name=\"color-scheme\" content=\"light dark\"></head><body><pre style=\"word-wrap: break-word; white-space: pre-wrap;\">{data}</pre></body></html>"
     return data
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@
 # SPG9000_Exporter.py                                              #
 #                                                                  #
 # Author:        Mike Kurras                                       #
-# Date:          2/27/2025                                         #
+# Date:          3/5/2025                                         #
 # Description:   OpenMetrics exporter for Telestream SPG9000 Sync  #
 #                Pulse Generator.                                  #
 #                Designed for use with Prometheus                  #
@@ -22,7 +22,7 @@ from SPG9000_Formatter import format_system_status
 #------------------------------------------------------------------#
 #Default Settings Overridden by ENV Variables
 #------------------------------------------------------------------#
-DEBUG = os.getenv('SPG9000_Exporter_Debug_Mode', False)
+DEBUG = os.getenv('SPG9000_Exporter_Debug_Mode', True)
 
 #Overridden at runtime
 SPG9000_IP_ADDRESS = ''
@@ -117,6 +117,8 @@ def api_get(schema):
 #------------------------------------------------------------------#
 def poll_system_status():
     data = api_get(POLL_SYSTEM_STATUS_SCHEMA)
+    if data is None:
+        return None
     prometheus_data = format_system_status(data)
     return prometheus_data
 
@@ -125,6 +127,8 @@ def poll_system_status():
 #------------------------------------------------------------------#
 def poll_system_health():
     data = api_get(POLL_SYSTEM_HEALTH_SCHEMA)
+    if data is None:
+        return None
     prometheus_data = format_system_health(data)
     return prometheus_data
 
@@ -133,6 +137,8 @@ def poll_system_health():
 #------------------------------------------------------------------#
 def poll_reference_status():
     data = api_get(POLL_REFERENCE_STATUS_SCHEMA)
+    if data is None:
+        return None
     prometheus_data = format_reference_status(data)
     return prometheus_data
 
@@ -168,13 +174,29 @@ def polldata (targetip, api_key):
     data = []
     #Only run the subroutines enabled
     if POLL_SYSTEM_STATUS == True:
-        data.append(poll_system_status())
+        polled_data = poll_system_status()
+        if polled_data is None:
+            pass
+        else:
+            data.append(poll_system_status())
     if POLL_SYSTEM_HEALTH == True:
-        data.append(poll_system_health())
+        polled_data = poll_system_health()
+        if polled_data is None:
+            pass
+        else:
+            data.append(poll_system_health())
     if POLL_REFERENCE_STATUS == True:
-        data.append(poll_reference_status())
+        polled_data = poll_reference_status()
+        if polled_data is None:
+            pass
+        else:
+            data.append(poll_reference_status())
     if POLL_PTP_STATUS == True:
-        data.append(poll_ptp_status())
+        polled_data = poll_ptp_status()
+        if polled_data is None:
+            pass
+        else:
+            data.append(poll_ptp_status())
         
     full_data = "\n".join(data)
     return full_data
